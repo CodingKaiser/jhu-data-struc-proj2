@@ -12,10 +12,10 @@ class ReadMatrixAndCompute {
   private int[][] matrix;
   private int i;
   private int j;
-  boolean parsingFirstLine;
-  boolean charIsNegative;
-  boolean prevWasSpace;
-  int maxDimens;
+  private boolean parsingFirstLine;
+  private boolean charIsNegative;
+  private boolean prevWasSpace;
+  private int maxDimens;
 
   ReadMatrixAndCompute(BufferedReader in, BufferedWriter out) {
     input = in;
@@ -43,6 +43,7 @@ class ReadMatrixAndCompute {
       if (parsingFirstLine) {
         maxDimens = j + 1;
         parsingFirstLine = false;
+        fitSizeOfMatrix();
       }
       i++; // Finished with first row
       if (c.equals('\r')) {
@@ -113,5 +114,15 @@ class ReadMatrixAndCompute {
     charIsNegative = false;
     prevWasSpace = true;
     maxDimens = 0;
+  }
+
+  private void fitSizeOfMatrix() {
+    if (maxDimens < 6) {
+      int[][] temp = new int[maxDimens][maxDimens];
+      for (int y = 0; y < maxDimens; y++) {
+        temp[i][y] = matrix[i][y];
+      }
+      matrix = temp;
+    }
   }
 }
