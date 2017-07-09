@@ -61,7 +61,9 @@ class ReadMatrixAndCompute {
   private void checkIfMatrixCompleteAndCompute(){
     if (i == maxDimens && j + 1 == maxDimens) {
       try {
-        output.write("Calculating...");
+        output.newLine();
+        output.write("Calculated value: PLC");
+        output.newLine();
       } catch (IOException e) {
         System.err.println(e);
       }
