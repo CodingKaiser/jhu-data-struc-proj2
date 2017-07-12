@@ -39,13 +39,11 @@ public class Lab2 {
   private void parseInputMatrices(BufferedReader input,
                                   BufferedWriter out) {
     int curr;
-    Character c;
     ReadMatrixAndCompute rmac = new ReadMatrixAndCompute(input, out);
     try {
       while (((curr = input.read()) != -1)) {
-        c = (char) curr;
-        rmac.handleCharacter(c);
-        out.write(curr);
+        System.out.println((char) curr);
+        rmac.handleCharacter(curr);
       }
     } catch (IOException e) {
       System.err.println(e);
