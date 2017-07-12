@@ -39,17 +39,24 @@ class ReadMatrixAndCompute {
     if (parsingDimensions) {
       handleDimensionsInput(chi);
     } else {
+      try {
+        output.write(c);
+      } catch (IOException e) {
+        System.err.println("Was not able to write to out.");
+      }
       if (c == ' ') {
         handleSpace();
       } else if (c == '-') {
         handleNegative();
       } else if (IntParser.isDigit(chi)) {
-        handleDigit(c);
+        handleDigit(chi);
       } else if (c.equals('\r') || (c.equals('\n'))){
-        if (prevWasSpace) {
+        if (parsingInt) {
+          insertValueIntoMatrix();
+        } else if (prevWasSpace) {
           j--;
         }
-        i++; // Finished with first row
+        i++;
         if (c.equals('\r')) {
           try {
             input.read(); // Windows EOL characters
@@ -74,6 +81,7 @@ class ReadMatrixAndCompute {
       matrix = new int[maxDimens][maxDimens];
       parsingDimensions = false;
       parsingInt = false;
+      currIntValue = 0;
       if ((char) i == '\r') {
         try {
           input.read(); // Windows EOL characters
@@ -89,9 +97,9 @@ class ReadMatrixAndCompute {
   private void checkIfMatrixCompleteAndCompute(){
     if (i == maxDimens && j + 1 == maxDimens) {
       try {
-        output.newLine();
         output.write("Calculated value: ");
         output.write(ComputeMatrix.determinant(matrix) + "");
+        output.newLine();
         output.newLine();
       } catch (IOException e) {
         System.err.println(e);
@@ -113,30 +121,28 @@ class ReadMatrixAndCompute {
   }
 
   private void handleSpace() {
-    if (charIsNegative) {
-      System.err.println("Dash preceded space");
-      handleErrors(' ');
-    } else if (prevWasSpace) {
+    if (prevWasSpace) {
       System.err.println("Single spaces only.");
       handleErrors(' ');
     } else {
+      insertValueIntoMatrix();
       j++;
     }
     prevWasSpace = true;
+    parsingInt = false;
+    charIsNegative = false;
+    currIntValue = 0;
   }
 
-  private void handleDigit(Character c) {
+  private void handleDigit(int c) {
+    int val = IntParser.toDigit(c);
     if (j >= 6) {
       System.err.println("The line exceeds the max");
-      handleErrors(c);
-    } else if (charIsNegative) {
-      matrix[i][j] = 0 - Integer.parseInt(c.toString());
-      prevWasSpace = false;
-      charIsNegative = false;
+      handleErrors((char) val);
     } else {
-      matrix[i][j] = Integer.parseInt(c.toString());
+      updateCurrIntegerValue(val);
       prevWasSpace = false;
-      charIsNegative = false;
+      parsingInt = true;
     }
   }
 
@@ -160,6 +166,14 @@ class ReadMatrixAndCompute {
     parsingInt = true;
     maxDimens = 0;
     prevEncounteredError = false;
+  }
+
+  private void insertValueIntoMatrix() {
+    if (charIsNegative) {
+      matrix[i][j] = 0 - currIntValue;
+    } else {
+      matrix[i][j] = currIntValue;
+    }
   }
 
   private void handleErrors(Character c) {
