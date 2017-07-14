@@ -67,7 +67,7 @@ class ReadMatrixAndCompute {
         checkIfMatrixCompleteAndCompute();
       } else {
         System.err.println("Invalid character");
-        handleErrors(c);
+        handleErrors("Invalid character " + c, i + 1, j);
       }
     }
   }
@@ -105,9 +105,12 @@ class ReadMatrixAndCompute {
         System.err.println(e);
       }
       reset();
-    } else if (i == maxDimens && j < maxDimens) {
+    } else if (j + 1 < maxDimens) {
       System.err.println("Too short!");
-      handleErrors('\r');
+      handleErrors("The line was too short", i, j);
+    } else if (j + 1 > maxDimens) {
+      System.err.println("Too long!");
+      handleErrors("The line was too long", i, j);
     }
     j = 0; // At end of line
   }
@@ -123,7 +126,7 @@ class ReadMatrixAndCompute {
   private void handleSpace() {
     if (prevWasSpace) {
       System.err.println("Single spaces only.");
-      handleErrors(' ');
+      handleErrors("More than one space ' ' consecutively", i + 1, j);
     } else {
       insertValueIntoMatrix();
       j++;
@@ -136,9 +139,9 @@ class ReadMatrixAndCompute {
 
   private void handleDigit(int c) {
     int val = IntParser.toDigit(c);
-    if (j >= 6) {
+    if (j >= maxDimens) {
       System.err.println("The line exceeds the max");
-      handleErrors((char) val);
+      handleErrors("The line exceeds the max allowable length", i + 1, j);
     } else {
       updateCurrIntegerValue(val);
       prevWasSpace = false;
@@ -149,7 +152,7 @@ class ReadMatrixAndCompute {
   private void handleNegative() {
     if (charIsNegative) {
       System.err.println("No consecutive dashes please");
-      handleErrors('-');
+      handleErrors("Consecutive dashes '-' present", i + 1, j);
     } else {
       charIsNegative = true;
       prevWasSpace = false;
@@ -176,23 +179,26 @@ class ReadMatrixAndCompute {
     }
   }
 
-  private void handleErrors(Character c) {
+  private void handleErrors(String errMessage, int errI, int errJ) {
     if (maxDimens > 0) {
       // Skip the rest of the lines in the matrix
       int next;
+      int errLineNum = i;
       try {
-        output.write(c);
         while (i < maxDimens && (next = input.read()) != -1) {
           output.write(next);
           if ((char) next == '\r' || (char) next == '\n') {
             i++;
-            System.err.println("Skipping ");
             if ((char) next == '\r') {
               output.write(input.read()); // Windows EOL
             }
           }
         }
-        output.write("Encountered error at character --> ");
+        output.write("Encountered error on line " + errI +
+                      " due to --> '" + errMessage + "'");
+        output.newLine();
+        output.newLine();
+        reset();
       } catch (IOException e) {
         System.err.println(e);
       }
