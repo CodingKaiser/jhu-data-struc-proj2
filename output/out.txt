@@ -38,3 +38,11 @@ Encountered error on line 1 due to --> 'Invalid character e'
 2 4 0 00 1 1 10 0 1 14 5 6 1 1
 Encountered error on line 4 due to --> 'The line exceeds the max allowable length'
 
+2 4 - 0
+0 1 1 1
+0 0 1 1
+4 5 6
+Encountered error on line 1 due to --> 'Integer did not follow '-' sign'
+
+2 0 0 0 0 0 0 00 2 0 0 0 0 0 00 0 2 0 0 0 0 00 0 0 2 0 0 0 00 0 0 0 2 0 0 00 0 0 0 0 2 0 00 0 0 0 0 0 2 00 0 0 0 0 0 0 2Calculated value: 256
+

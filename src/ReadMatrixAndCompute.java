@@ -127,6 +127,9 @@ class ReadMatrixAndCompute {
     if (prevWasSpace) {
       System.err.println("Single spaces only.");
       handleErrors("More than one space ' ' consecutively", i + 1, j);
+    } else if (!parsingInt) {
+      System.err.println("Negative sign without following integer.");
+      handleErrors("Integer did not follow '-' sign", i + 1, j);
     } else {
       insertValueIntoMatrix();
       j++;
