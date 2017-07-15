@@ -1,14 +1,28 @@
 import java.io.*;
 
 /**
- * Created by falko on 07-07-17.
+ * Main driver and entry point into the application. Reads the input
+ * matrices and calculates the corresponding determinant.
+ * Writes the matrix and the calculated value to output.
+ * This application must be called
+ * from the command line with valid input/output file paths
+ * as arguments.
+ * @Author Falko Noe
  */
 public class Lab2 {
 
+  /**
+   * The main entry point to the class. Will be called when the
+   * user runs this program from the command-line.
+   * @param args An array holding the two command-line arguments. The
+   *             first argument is the input file in text format. The
+   *             second argument is the path to the output text file.
+   *             Both arguments must be valid paths.
+   */
   public static void main(String[] args) {
 
-    BufferedReader input;
-    BufferedWriter output;
+    BufferedReader input; // will hold the input
+    BufferedWriter output; // will hold the output
     Lab2 lab;
 
     if (args.length != 2) {
@@ -26,9 +40,11 @@ public class Lab2 {
     }
 
     lab = new Lab2();
-    lab.parseInputMatrices(input, output);
+    lab.parseInputMatrices(input, output); // read input and process
 
     try {
+      /* Close the input and output, writes file output,
+       * and exit the application */
       input.close();
       output.close();
     } catch (IOException e) {
@@ -36,12 +52,23 @@ public class Lab2 {
     }
   }
 
+  /**
+   * Reads the input file character by character via the BufferedReader
+   * and passes the characters to ReadMatrixAndCompute which
+   * handles the letters according to the logic delineated therein.
+   * Will run until the end of the line is reached.
+   * @param input: The input BufferedReader which the input
+   *             will be read from
+   * @param out: The output BufferedWriter which the output
+   *           will be written to.
+   */
   private void parseInputMatrices(BufferedReader input,
                                   BufferedWriter out) {
     int curr;
     char c;
     ReadMatrixAndCompute rmac = new ReadMatrixAndCompute(input, out);
     try {
+      // Read until end of the file is reached
       while (((curr = input.read()) != -1)) {
         c = (char) curr;
         rmac.handleCharacter(curr);
