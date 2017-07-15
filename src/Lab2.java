@@ -8,6 +8,7 @@ import java.io.*;
  * from the command line with valid input/output file paths
  * as arguments.
  * @Author Falko Noe
+ * @Version 1.0
  */
 public class Lab2 {
 
